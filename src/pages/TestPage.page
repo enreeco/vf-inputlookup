@@ -1,0 +1,35 @@
+<apex:page controller="TestPageController" >
+	<script>
+    	function echo(){
+            console.log(selectedId);
+        }
+    </script>
+    <apex:form >
+        
+        <apex:pageblock >
+            <apex:pageBlockButtons location="bottom">
+            	<apex:commandButton value="SUBMIT" action="{!submit}" />
+            </apex:pageBlockButtons>
+        	<apex:pageblocksection columns="2">
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Account lookup</apex:outputLabel>
+                	<c:inputLookup sobject="Account" value="{!idValue1}"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Selected Account ID:</apex:outputLabel>
+                	<apex:outputText value="{!idValue1.value}"/>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Contact lookup</apex:outputLabel>
+                	<c:inputLookup sobject="Contact" value="{!idValue2}" />
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel >Selected Contact ID:</apex:outputLabel>
+                	<apex:outputText value="{!idValue2.value}"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageblocksection>
+        </apex:pageblock>
+        
+    </apex:form>
+</apex:page>

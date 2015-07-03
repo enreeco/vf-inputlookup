@@ -1,0 +1,53 @@
+<apex:component controller="InputLookupController" id="lkpCmp">
+    <apex:attribute name="sobject" assignTo="{!SobjectAPIName}" type="String" required="true" description="Sobject API Name"/>
+    <apex:attribute name="value" type="IDCarrier" required="false" description="Value field" assignTo="{!valueSelected}"/>
+    
+    <apex:variable value="{!$Component.lkpCmp}" var="contCmpId" />
+    <apex:variable value="{!contCmpId}_npt" var="cmpId" />
+    <apex:includescript value="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" />
+    <script>
+    	jQuery(function(){
+            $ = jQuery.noConflict();
+            //copies the "_lkid" input into our own input hidden (valueSelected.value var)
+            $("[id='{!cmpId}']").on("blur",function(){
+            	$("[id='{!$Component._rv}']").val($("[id='{!cmpId}_lkid']").val());
+            })
+            //copies the object's "name" on out own input hidden (nameTypes var)
+            .on("keyup", function(){
+                $("[id='{!$Component._nu}']").val($("[id='{!cmpId}']").val());
+            });
+            
+        });
+    </script>
+    
+    <apex:inputhidden id="_rv" value="{!valueSelected.value}" />
+    <apex:inputhidden id="_nu" value="{!nameTyped}" />
+    <!-- replicate lookup hidden fields -->
+    <input type="hidden" name="{!cmpId}_lkid" id="{!cmpId}_lkid" value="{!valueSelected.value}" />
+    <input type="hidden" name="{!cmpId}_lkold" id="{!cmpId}_lkold" value="{!name}" />
+    <input type="hidden" name="{!cmpId}_lktp" id="{!cmpId}_lktp" value="{!$ObjectType[sobjectAPIName].keyPrefix}" />
+    <input type="hidden" name="{!cmpId}_lspf" id="{!cmpId}_lspf" value="0" />
+    <input type="hidden" name="{!cmpId}_lspfsub" id="{!cmpId}_lspfsub" value="0" />
+    <input type="hidden" name="{!cmpId}_mod" id="{!cmpId}_mod" value="0" />
+    
+    <span class="lookupInput">
+        <input id="{!cmpId}" maxlength="255" name="{!cmpId}" value="{!name}"
+               onchange="getElementByIdCS('{!cmpId}_lkid').value='';getElementByIdCS('{!cmpId}_mod').value='1';" 
+               size="20" type="text" />
+        <script>
+        	new ForeignKeyInputElement("{!cmpId}","/_ui/common/data/LookupValidationServlet",null,true,{"acent":"{!$ObjectType[sobjectAPIName].keyPrefix}"});
+        </script>
+        <apex:variable var="aurl" value="{! URLENCODE("openLookup(\"/_ui/common/data/LookupPage?lkfm=" & URLENCODE(contCmpId) & "&lknm=" & URLENCODE(cmpId) & "&lktp=\"+getElementByIdCS(\"" & cmpId & "_lktp\").value,670,\"1\",\"&lksrch=\"+escapeUTF(getElementByIdCS(\"" & cmpId & "\").value.substring(0, 80)))")}" />
+        <a href="javascript:{!aurl}" 
+           id="{!cmpId}_lkwgt" 
+           onclick="setLastMousePosition(event)" 
+           title="{!$ObjectType[sobjectAPIName].label} Lookup (New Window)"><img src="/s.gif" alt="{!$ObjectType[sobjectAPIName].label} Lookup (New Window)" 
+                 class="lookupIcon" 
+                 onblur="this.className = 'lookupIcon';" 
+                 onfocus="this.className = 'lookupIconOn';" 
+                 onmouseout="this.className = 'lookupIcon';this.className = 'lookupIcon';" 
+                 onmouseover="this.className = 'lookupIconOn';this.className = 'lookupIconOn';" 
+                 title="{!$ObjectType[sobjectAPIName].label} Lookup (New Window)" /></a>
+    </span>
+    
+</apex:component>
