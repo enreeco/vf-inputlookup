@@ -1,4 +1,4 @@
-//Author: Enrico Murru (http://enree.co)			
+//Author: Enrico Murru (http://enree.co)      
 public class InputLookupController {
     //name eventually types by the user on the "name" input field
     public String nameTyped{get;Set;}
@@ -55,6 +55,12 @@ public class InputLookupController {
                                        }else if(String.isNotBlank(this.nameTyped)){
                                            String likeValue = '%'+String.escapeSingleQuotes(this.nameTyped)+'%';
                                            query += ' '+nameField+' LIKE :likeValue order by '+nameField+' limit 10';
+                                       }else{
+                                           name = null;
+                                           valueSelected.value = null;
+                                           oldValue = null;
+                                           this.nameTyped = name;
+                                           return;
                                        }
                                        //query the object
                                        //If we are doing a "like" query, in case of more than 1 record, the first one is selected.
@@ -62,6 +68,7 @@ public class InputLookupController {
                                        //to replicate apex:input behavior: if more none or more than 1 record is found, we block
                                        //the form submission and show a picklist: if we find a way
                                        //to block the submission from within the component, we would do this with no effort
+                                       System.debug('## Query: '+query);
                                        List<SObject> objList = Database.query(query);
                                        if(objList.isEmpty()){
                                            name = null;
