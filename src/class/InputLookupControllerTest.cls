@@ -1,7 +1,8 @@
 //Author: Enrico Murru (http://enree.co)
 @isTest
 private class InputLookupControllerTest {
-    private static testmethod void unit_test_1(){
+    @isTest
+    private static void unit_test_1(){
         
         Account acc = new Account(Name = 'Test');
         insert acc;
